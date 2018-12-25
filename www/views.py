@@ -147,3 +147,31 @@ class ScoreView(View):
             ],
             'pages': p.num_pages
         })
+
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return JsonResponse(data={
+                'status': 'error',
+                'errors': [
+                    'You are not authenticated.'
+                ]
+            }, status=403)
+
+        try:
+            data = json.loads(request.body)
+        except ValueError:
+            return JsonResponse(data={
+                'status': 'error',
+                'errors': [
+                    'Not json. POST body must contain score.'
+                ]
+            }, status=400)
+        score = data.get('score', None)
+
+        if score:
+            newScore = Score(user=request.user, score=score)
+            newScore.save()
+
+        return JsonResponse(data={
+            'status': 'ok',
+        })
