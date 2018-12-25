@@ -8,3 +8,4 @@ howto:
 # manage.py migrate
 
 run gunicorn (already installed)
+# gunicorn osu_cipher.wsgi
